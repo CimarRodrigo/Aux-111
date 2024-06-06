@@ -1,0 +1,365 @@
+Clase ALUMNO
+
+import java.io.IOException;
+import java.util.Scanner;
+public class PrincipalArchiAlumno {
+	 public static void main(String[] args)
+	 {
+	  int op,num;
+	  ArchiAlumno AA = new ArchiAlumno("Alumno2.dat");
+	  Alumno A = new Alumno();
+	  try
+	  {   do
+	   {
+	    System.out.println("\n \t\tMENU ALUMNO ");
+	    System.out.println(" 1: ADICIONAR ALUMNO ");
+	    System.out.println(" 2: MOSTRAR ALUMNOS ");
+	    System.out.println(" 3: CONSULTA SEGUN COD ");
+	    System.out.println(" 4: CONSULTA SOLO MUJERES ");
+	    System.out.println(" 5: ELIMINAR UN ALUMNO ");
+	    System.out.println(" 6: Edad de los ALUMNOS ");
+	    System.out.println(" 7: SALIR ");
+	    System.out.println(" Intro Opcion ");
+	    op = Leer.datoInt();
+	    
+	    switch(op)
+	    {
+	     case 1: System.out.println("En Adicionar ");
+	       A.leer();
+	       AA.adicionar(A.obtc(), A.obtp(), A.obtm(), A.obtn(), A.obts(),A.obta());
+	       break;
+	     case 2: 
+	       AA.mostrar();
+	       break;
+	     case 3: System.out.println("Intro cod a buscar ");
+	       num=Leer.datoInt();
+	       AA.buscarcod(num);
+	       break;
+	     case 4: AA.consulmuj(0);
+	       break;
+	     case 5: System.out.println("Intro cod a eliminar ");
+	       num=Leer.datoInt();
+	       AA.eliminar(num);
+	       break;
+	     case 6: 
+		       AA.varonmayor();
+		       break;
+	    }
+	   }while(op<=6);
+	   System.out.println(" CHAUUUU... ");
+	  }
+	  catch(IOException e){}
+	 }
+}
+
+Clase ARCHIALUMNO
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Scanner;
+public class ArchiAlumno {
+	private
+	  String nomarch="";
+	 public
+	  ArchiAlumno()
+	  { nomarch="";
+	  }
+	  ArchiAlumno(String x)
+	  { nomarch=x;
+	  }
+	  void adicionar(int a,String b, String c, String d, int e, int f) throws IOException
+	  { 
+	   DataOutputStream Archi = null;
+	   try
+	   {
+	    Archi = new DataOutputStream( new FileOutputStream("../"+nomarch,true));
+	    Archi.writeInt(a);
+	    Archi.writeUTF(b);
+	    Archi.writeUTF(c);
+	    Archi.writeUTF(d);
+	    Archi.writeInt(e);
+	    Archi.writeInt(f);
+	    Archi.close();
+	   }
+	   catch(FileNotFoundException fnfe) {System.out.println("error "+fnfe);}
+	   catch (IOException ioe) { System.out.println("error 1"+ioe);}
+	  }
+	  void mostrar() throws IOException
+	  { 
+	   DataInputStream Archi = null;
+	   //int suma=0,cont=0;
+	   //double promedio=0; //promedio edad
+	   try
+	   { //Alumno A = new Alumno();
+	    Archi = new DataInputStream( new FileInputStream("../"+nomarch) );
+	    System.out.println("COD\t PATER  \tMATER \tNOMBRE \tSEXO \tANAC");
+	    while (true)
+	    {   Alumno A = new Alumno();
+	     A.ponc(Archi.readInt());
+	     A.ponp(Archi.readUTF());
+	     A.ponm(Archi.readUTF());
+	     A.ponn(Archi.readUTF());
+	     A.pons(Archi.readInt());
+	     A.pona(Archi.readInt());	     
+	     A.mostrar();
+	    }
+	   }
+	   catch(FileNotFoundException fnfe) {}
+	   catch (IOException ioe) {}
+	   Archi.close();
+	  }
+	  void buscarcod(int x) throws IOException
+	  { 
+	   DataInputStream Archi = null;
+	   try
+	   {
+	    Archi = new DataInputStream( new FileInputStream("../"+nomarch) );
+	    System.out.println("COD\t PATER\tMATER\tNOMBRE \tSEXO \tANAC");
+	    while (true)
+	    { Alumno A = new Alumno();
+	    A.ponc(Archi.readInt());
+	     A.ponp(Archi.readUTF());
+	     A.ponm(Archi.readUTF());
+	     A.ponn(Archi.readUTF());
+	     A.pons(Archi.readInt());
+	     A.pona(Archi.readInt());
+	     if (A.obtc()==x)
+	     {
+	      A.mostrar();
+	     }
+	    }
+	   }
+	   catch(FileNotFoundException fnfe) {}
+	   catch (IOException ioe) {}
+	   Archi.close();
+	  }
+	  void consulmuj(int x) throws IOException
+	  { 
+	   DataInputStream Archi = null;
+	   try
+	   {
+	    Archi = new DataInputStream( new FileInputStream("../"+nomarch) );
+	    System.out.println("COD\t PATER\tMATER\tNOMBRE \tSEXO \tANAC");
+	    while (true)
+	    {
+	     Alumno A = new Alumno();
+	     A.ponc(Archi.readInt());
+	     A.ponp(Archi.readUTF());
+	     A.ponm(Archi.readUTF());
+	     A.ponn(Archi.readUTF());
+	     A.pons(Archi.readInt());
+	     A.pona(Archi.readInt());
+	     if (A.obts()==x)
+	     {
+	      A.mostrar();
+	     }
+	    }
+	   }
+	   catch(FileNotFoundException fnfe) {}
+	   catch (IOException ioe) {}
+	   Archi.close();
+	  }
+	  void eliminar(int x) throws IOException
+	  { 
+	   DataInputStream Archi = null;
+	   DataOutputStream ArchiTemp = null;
+	   try
+	   { ArchiTemp = new DataOutputStream( new FileOutputStream("../temporal2.dat",true ) );
+	    Archi = new DataInputStream( new FileInputStream("../"+nomarch) );
+	    
+	    while (true)
+	    {
+	     Alumno A = new Alumno();
+	     A.ponc(Archi.readInt());
+	     A.ponp(Archi.readUTF());
+	     A.ponm(Archi.readUTF());
+	     A.ponn(Archi.readUTF());
+	     A.pons(Archi.readInt());
+	     A.pona(Archi.readInt());
+	     if (A.obtc()!=x)
+	     { 
+	      ArchiTemp.writeInt(A.obtc());
+	      ArchiTemp.writeUTF(A.obtp());
+	      ArchiTemp.writeUTF(A.obtm());
+	      ArchiTemp.writeUTF(A.obtn());
+	      ArchiTemp.writeInt(A.obts());
+	      ArchiTemp.writeInt(A.obta());
+	     }
+	     
+	    }
+	   }
+	   catch(FileNotFoundException fnfe) {}
+	   catch (IOException ioe) {}
+	   try
+	   {
+	    Archi.close();
+	    ArchiTemp.close();
+	    File file1 = new File("../"+nomarch);
+	    File file2 = new File("../temporal2.dat");
+	    if (file1.exists()){  file1.delete();}
+	    file2.renameTo(file1);
+	   }
+	   catch(IOException var){ System.out.println(" error ");}
+	  }
+	  void modificar(int x) throws IOException
+	  {}
+	  //void varonmayor() throws IOException
+	  //{}
+	  void varonmayor() throws IOException
+	  { 
+	   DataInputStream Archi = null;
+	   int may=0;
+	   try
+	   { //Alumno A = new Alumno();
+	    Archi = new DataInputStream( new FileInputStream("../"+nomarch) );
+	    System.out.println("COD\t PATER  \tMATER \tNOMBRE \tSEXO \tANAC");
+	    while (true)
+	    {   Alumno A = new Alumno();
+	     A.ponc(Archi.readInt());
+	     A.ponp(Archi.readUTF());
+	     A.ponm(Archi.readUTF());
+	     A.ponn(Archi.readUTF());
+	     A.pons(Archi.readInt());
+	     A.pona(Archi.readInt());	     
+	     A.mostrar();
+	     System.out.println("Edad = "+A.edad());
+	    }
+	   }
+	   catch(FileNotFoundException fnfe) {}
+	   catch (IOException ioe) {}
+	   Archi.close();
+	  }
+}
+
+
+Clase PRINCIPAL
+
+import java.io.IOException;
+import java.util.Scanner;
+public class PrincipalArchiAlumno {
+	 public static void main(String[] args)
+	 {
+	  int op,num;
+	  ArchiAlumno AA = new ArchiAlumno("Alumno2.dat");
+	  Alumno A = new Alumno();
+	  try
+	  {   do
+	   {
+	    System.out.println("\n \t\tMENU ALUMNO ");
+	    System.out.println(" 1: ADICIONAR ALUMNO ");
+	    System.out.println(" 2: MOSTRAR ALUMNOS ");
+	    System.out.println(" 3: CONSULTA SEGUN COD ");
+	    System.out.println(" 4: CONSULTA SOLO MUJERES ");
+	    System.out.println(" 5: ELIMINAR UN ALUMNO ");
+	    System.out.println(" 6: Edad de los ALUMNOS ");
+	    System.out.println(" 7: SALIR ");
+	    System.out.println(" Intro Opcion ");
+	    op = Leer.datoInt();
+	    
+	    switch(op)
+	    {
+	     case 1: System.out.println("En Adicionar ");
+	       A.leer();
+	       AA.adicionar(A.obtc(), A.obtp(), A.obtm(), A.obtn(), A.obts(),A.obta());
+	       break;
+	     case 2: 
+	       AA.mostrar();
+	       break;
+	     case 3: System.out.println("Intro cod a buscar ");
+	       num=Leer.datoInt();
+	       AA.buscarcod(num);
+	       break;
+	     case 4: AA.consulmuj(0);
+	       break;
+	     case 5: System.out.println("Intro cod a eliminar ");
+	       num=Leer.datoInt();
+	       AA.eliminar(num);
+	       break;
+	     case 6: 
+		       AA.varonmayor();
+		       break;
+	    }
+	   }while(op<=6);
+	   System.out.println(" CHAUUUU... ");
+	  }
+	  catch(IOException e){}
+	 }
+}
+
+Clase LEER
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Leer {
+	public static String dato ()
+    { String cadena = "";
+	try
+	{   //Otra alternativapara declarar la Entrada de Datos
+	    BufferedReader Entrada=new BufferedReader(new InputStreamReader (System.in));
+	    cadena=Entrada.readLine();
+	}
+	catch (IOException e)
+	{System.err.println ("Error:" + e.getMessage ());
+	}
+	return cadena;
+    }
+
+
+    public static short datoShort ()
+    { try
+      { return Short.parseShort (dato ());
+      }
+      catch (NumberFormatException e)
+      {return Short.MIN_VALUE;
+      }
+    }
+
+
+    public static int datoInt ()
+    { try
+      {return Integer.parseInt (dato ());
+      }
+      catch (NumberFormatException e)
+      { return Integer.MIN_VALUE;
+      }
+    }
+
+
+    public static long datoLong ()
+    { try
+      { return Long.parseLong (dato ());
+      }
+      catch (NumberFormatException e)
+      { return Long.MIN_VALUE;
+      }
+    }
+    
+    public static float datoFloat()
+    { try
+      { Float f=new Float(dato());
+	return f.floatValue();
+      }
+      catch(NumberFormatException e)
+      { return Float.NaN;
+      }
+    }
+    
+    public static double datoDouble()
+    { try
+      { Double d=new Double(dato());
+	return d.doubleValue();
+      }
+      catch(NumberFormatException e)
+      { return Double.NaN;
+      }
+    }
+}
+
+
